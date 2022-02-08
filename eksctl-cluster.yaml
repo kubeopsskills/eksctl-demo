@@ -77,7 +77,7 @@ managedNodeGroups:
       albIngress: true
       ebs: false
       efs: false
-      cloudWatch: true
+      cloudWatch: false
   tags:
     Name: kubeops-subnet-b-on-demand
     kubeops:name: kubeops-subnet-b-on-demand
