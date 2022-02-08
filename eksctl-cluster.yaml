@@ -1,0 +1,84 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: kukeops-cluster
+  region: us-east-1
+  version: "1.21"
+vpc:
+  subnets:
+    private:
+      us-east-1a: { id: subnet-07879545161eb0a45 }
+      us-east-1b: { id: subnet-0360e6d4e911efb71 }
+iam:
+  withOIDC: true
+  serviceAccounts: []
+managedNodeGroups:
+
+- name: kubeops-subnet-a-on-demand
+  amiFamily: AmazonLinux2
+  labels:
+    name: kubeops-subnet-a-on-demand
+    role: service_node
+    environment: dev
+  subnets:
+  - us-east-1a
+  spot: false
+  instanceTypes:
+  - t3.xlarge
+  - t3.2xlarge
+  desiredCapacity: 1
+  minSize: 1
+  maxSize: 3
+  privateNetworking: true
+  securityGroups:
+    attachIDs:
+    - "sg-005c01659995c1a49"
+  iam:
+    withAddonPolicies:
+      imageBuilder: true
+      autoScaler: true
+      externalDNS: false
+      certManager: false
+      albIngress: true
+      ebs: false
+      efs: false
+      cloudWatch: false
+  tags:
+    Name: kubeops-subnet-a-on-demand
+    kubeops:name: kubeops-subnet-a-on-demand
+    kubeops:service: eks-ondemand-subnet-a-node-group
+
+- name: kubeops-subnet-b-on-demand
+  amiFamily: AmazonLinux2
+  labels:
+    name: kubeops-subnet-b-on-demand
+    role: service_node
+    environment: dev
+  subnets:
+  - us-east-1b
+  spot: false
+  instanceTypes:
+  - t3.xlarge
+  - t3.2xlarge
+  desiredCapacity: 1
+  minSize: 1
+  maxSize: 3
+  privateNetworking: true
+  securityGroups:
+    attachIDs:
+    - "sg-005c01659995c1a49"
+  iam:
+    withAddonPolicies:
+      imageBuilder: true
+      autoScaler: true
+      externalDNS: false
+      certManager: false
+      albIngress: true
+      ebs: false
+      efs: false
+      cloudWatch: true
+  tags:
+    Name: kubeops-subnet-b-on-demand
+    kubeops:name: kubeops-subnet-b-on-demand
+    kubeops:service: eks-ondemand-subnet-b-node-group
